@@ -9,11 +9,17 @@ from django.contrib.auth.models import User
 def projects(request):
     projects = Project.objects.all()
     project_categories = ProjectCategory.objects.all()
+
+    for project in projects:
+        tasks = project.tasks.all()
+        for item in tasks:
+            project.total_budget += item.budget
+    
     return render(request,
         'projects/projects.html',
         {
             'projects': projects,
-            'project_categories': project_categories,
+            'project_categories': project_categories
         }
     )
 
