@@ -64,6 +64,7 @@ class Task(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField(max_length=500)
     budget = models.IntegerField(default=0)
+    location = models.TextField(default = '')
 
     AWAITING_DELIVERY = 'ad'
     PENDING_ACCEPTANCE = 'pa'

@@ -52,13 +52,17 @@ def new_project(request):
             task_title = request.POST.getlist('task_title')
             task_description = request.POST.getlist('task_description')
             task_budget = request.POST.getlist('task_budget')
+            task_location = request.POST.getlist('task_location')
+
             for i in range(0, len(task_title)):
                 Task.objects.create(
                     title = task_title[i],
                     description = task_description[i],
                     budget = task_budget[i],
+                    location = task_location[i],
                     project = project,
                 )
+                
             return redirect('project_view', project_id=project.id)
     else:
         form = ProjectForm()
