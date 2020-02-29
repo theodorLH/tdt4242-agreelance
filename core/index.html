@@ -48,6 +48,8 @@
                      <ul>
                        {% for task in project|all_tasks %}
                        {{task.title}} - {{task|offers}}
+                       <p>Total budget: {{project.total_budget}}</p>
+                       <p>Location: {{task.location}}</p>
                        {% endfor %}
                      </ul>
                      </span>
@@ -83,8 +85,9 @@
                <ul class="mb-1 ml-5 offerer-taskoffer-status">
                  {% for task in project|all_tasks %}
                  {{task.title}} - {{task|task_status}}
+                 <p>Total budget: {{project.total_budget}}</p>
+                 <p>Location: {{task.location}}</p>
                  {% endfor %}
-                
                </ul>
              </div>
            </a>
@@ -106,7 +109,12 @@
             <a href="{% url 'project_view' project_id=project.id%}" class="list-group-item list-group-item-action flex-column align-items-start my-1">
              <div class="d-flex w-100 justify-content-between align-items-center">
                <h5 class="mb-1">{% icon 'comments' %} {{project.title}}</h5>
-
+               {% for task in project|all_tasks %}
+                {{task.title}} - {{task|task_status}}
+                <p>Project owner: {{project.user}}</p>
+                <p>Total budget: {{project.total_budget}}</p>
+                <p>Location: {{task.location}}</p>
+               {% endfor %}
                {% define project|get_user_task_statuses:user as user_task_statuses %}
 
                <div>
@@ -141,7 +149,12 @@
             <a href="{% url 'project_view' project_id=project.id%}" class="list-group-item list-group-item-action flex-column align-items-start my-1">
              <div class="d-flex w-100 justify-content-between align-items-center">
                <h5 class="mb-1">{% icon 'comments' %} {{project.title}}</h5>
-
+               {% for task in project|all_tasks %}
+               {{task.title}} - {{task|task_status}}
+               <p>Project owner: {{project.user}}</p>
+               <p>Total budget: {{project.total_budget}}</p>
+               <p>Location: {{task.location}}</p>
+               {% endfor %}
                {% define project|check_nr_user_offers:user as offers %}
                <div>
                  {%if not offers.declined == 0 %}<span class="badge badge-danger badge-pill">{{offers.declined}} </span>{%endif%}
