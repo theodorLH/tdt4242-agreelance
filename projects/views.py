@@ -76,9 +76,7 @@ def project_view(request, project_id):
 
     for item in tasks:
         total_budget += item.budget
-
     if request.user == project.user.user:
-
         if request.method == 'POST' and 'offer_response' in request.POST:
             instance = get_object_or_404(TaskOffer, id=request.POST.get('taskofferid'))
             offer_response_form = TaskOfferResponseForm(request.POST, instance=instance)
