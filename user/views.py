@@ -5,6 +5,11 @@ from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 
+from django.contrib.auth.models import User
+from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
 from .forms import SignUpForm
 
 def index(request):
@@ -32,23 +37,22 @@ def signup(request):
     return render(request, 'user/signup.html', {'form': form})
 
 
-#def getFormInput():
-
-
-
 @login_required
 def profile(request):
-    #old_user = request.user
     old_user = request.user
+
     if request.method == 'POST':
-        form = SignUpForm(request.POST)
-        #newForm = SignUpForm2(request.POST)   #nødvendig?
+        form = SignUpForm(request.POST) #finner forrige verdier || henter nye verdier
         if form.is_valid():
            
            #Dette jeg prøver på nå, at hele form-et skal endres, ikke bare enkelt fields
 
-            new_user = form.save()
-            old_user = models.update_user_profile(old_user, new_user,created, **kwargs)
+            #new_user = form.save()
+            #old_user = models.update_user_profile(old_user, new_user,created, **kwargs)
+            #form = form.cleaned_data(new_user) #ny profil med "renset verdier', konvertert til riktige verdier
+            #form = SignUpForm(a) #ny form med med ny verdier i gammel form
+            #form.save()                         #lagre de nye verdiene
+
 
 
 
@@ -90,23 +94,29 @@ def profile(request):
             #Skaper bare en ny bruker:
             
             
-            #user = form.save()
-            #user.refresh_from_db()
+            user = form.save()
+            user.refresh_from_db()
 
-            #user.profile.company = form.cleaned_data.get('company')
+            user.profile.company = form.cleaned_data.get('company')
 
-            #user.is_active = True
-            #user.profile.categories.add(*form.cleaned_data['categories'])
-            #user.save()
-            #raw_password = form.cleaned_data.get('password1')
-            #user = authenticate(username=user.username, password=raw_password)
-            #old_user = user
+            user.is_active = True
+            user.profile.categories.add(*form.cleaned_data['categories'])
+            user.save()
+            raw_password = form.cleaned_data.get('password1')
+            user = authenticate(username=user.username, password=raw_password)
+            
+            a = form.cleaned_data.get('username')
+            a = int(a)
+            for field in a.items():     #prøver å dele opp pga mengden, men items() kan ikke brukes for str, men kan ikke konverte til int heller...
+                print(field)
 
-
-            #------------------------------------------------------------------------
+                b = User.objects.get(a)
+                #b = b.split('') 
+                b.delete()
             
             
-            #user.save()
+            #request.user.get(username).delete()
+            
         
             from django.contrib import messages
             messages.success(request, 'Your account information has been updated')
