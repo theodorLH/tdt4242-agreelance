@@ -197,3 +197,53 @@ class Tester(TestCase):
         assert(response['owner'] == False)
         assert(response['upload'] == False)
 
+
+    ################# boundary value testing ##################
+
+    def test_boundary_project_offer_valid(self):
+        user2 = User.objects.create_user(
+            username = "Testoline",
+            password = "qwerty123",
+        )
+
+        login_data = {
+            'username': 'Testoline',
+            'password': 'qwerty123'
+        }
+
+        request = self.client.post('/user/login/', login_data)
+        self.assertEqual(request.status_code, 302)
+
+        data = {
+            'title': 'Testing title',
+            'description': 'Testing description',
+            'price': 230,
+            'taskvalue': self.task1.id,
+            'offer_submit': ''
+        }
+
+        request2 = self.client.post('/projects/' + str(self.project1.id) + '/', data)
+        self.assertNotEqual(TaskOffer.objects.last(), None)
+
+
+    def test_boundary_project_offer_invalid(self):
+        user2 = User.objects.create_user(
+            username = "Testoline",
+            password = "qwerty123",
+        )
+
+        data = {
+            'title': '', #missing
+            'desription': 'Testing description',
+            'price': 230, 
+            'taskvalue': int(self.task1.id),
+            'offer_submit': ''
+        }
+
+
+        request = self.client.post('/projects/' + str(self.project1.id) + '/', data)
+        self.assertEqual(TaskOffer.objects.last(), None)
+
+
+
+
