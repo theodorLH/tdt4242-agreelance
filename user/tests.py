@@ -83,12 +83,11 @@ class Tester(TestCase):
         # Assert status_code != 302 (redirect)
         self.assertEqual(response.status_code, 200)
 
-
     def test_boundary_signup_get(self):
         response = self.client.get('/user/signup/')
         self.assertEqual(response.status_code, 200)
 
-    def test_boundary_project_offer(self):
-        return
+
+    
 
 
