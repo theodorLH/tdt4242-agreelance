@@ -245,4 +245,106 @@ class Tester(TestCase):
 
 
 
+    ################# output coverage testing ##################
+    def test_output_coverage_accepted_offer(self):
+        # accept the project offer
+        user2 = User.objects.create_user(
+            username = "Testoline",
+            password = "qwerty123",
+        )
+        taskOffer1 = TaskOffer.objects.create(
+            task = self.task1,
+            title = "Great offer",
+            description = "Will clean",
+            price = 450,
+            offerer = user2.profile,
+            status = 'p',
+            feedback = ''
+        )
+
+        login_data = {
+            'username': 'Tester Guy',
+            'password': 'qwerty123'
+        }
+
+        request = self.client.post('/user/login/', login_data)
+        self.assertEqual(request.status_code, 302)
+        
+        data = {
+            'user': self.user1, 
+            'offer_response': 'good',
+            'feedback': 'sounds good!',
+            'status': 'a',
+            'taskofferid': 1
+        }
+
+        request = self.client.post('/projects/' + str(self.project1.id) + '/', data)
+        
+        assert(TaskOffer.objects.last().status == 'a')
+
+
+    def test_output_coverage_declined_offer(self):
+        # decline the project offer
+        user2 = User.objects.create_user(
+            username = "Testoline",
+            password = "qwerty123",
+        )
+        taskOffer1 = TaskOffer.objects.create(
+            task = self.task1,
+            title = "Great offer",
+            description = "Will clean",
+            price = 450,
+            offerer = user2.profile,
+            status = 'p',
+            feedback = ''
+        )
+
+        login_data = {
+            'username': 'Tester Guy',
+            'password': 'qwerty123'
+        }
+
+        request = self.client.post('/user/login/', login_data)
+        self.assertEqual(request.status_code, 302)
+        
+        data = {
+            'user': self.user1, 
+            'offer_response': 'Bad offer',
+            'feedback': 'no good',
+            'status': 'd',
+            'taskofferid': 1
+        }
+
+        request = self.client.post('/projects/' + str(self.project1.id) + '/', data)
+        
+        assert(TaskOffer.objects.last().status == 'd')
+
+
+    def test_output_coverage_declined_offer_not_authenticated(self):
+        # try to decline the project offer when not authenticated as project owner
+        user2 = User.objects.create_user(
+            username = "Testoline",
+            password = "qwerty123",
+        )
+        taskOffer1 = TaskOffer.objects.create(
+            task = self.task1,
+            title = "Great offer",
+            description = "Will clean",
+            price = 450,
+            offerer = user2.profile,
+            status = 'p',
+            feedback = ''
+        ) 
+        
+        data = {
+            'user': self.user1, # try to pass as project owner, but not authenticated through login
+            'offer_response': 'Bad offer',
+            'feedback': 'no good',
+            'status': 'd',
+            'taskofferid': 1
+        }
+
+        request = self.client.post('/projects/' + str(self.project1.id) + '/', data)
+        
+        assert(TaskOffer.objects.last().status == 'p')
 
