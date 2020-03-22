@@ -240,7 +240,6 @@ class Tester(TestCase):
             'offer_submit': ''
         }
 
-
         request = self.client.post('/projects/' + str(self.project1.id) + '/', data)
         self.assertEqual(TaskOffer.objects.last(), None)
 
