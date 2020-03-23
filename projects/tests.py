@@ -349,6 +349,8 @@ class Tester(TestCase):
         assert(TaskOffer.objects.last().status == 'p')
 
 
+    ########### integration tests ############
+
     def test_integration_budget_feature(self):
         user2 = User.objects.create_user(
             username = "Testoline",
@@ -441,7 +443,7 @@ class Tester(TestCase):
             'username': 'TestyAndTasty',
             'password': 'Superuser_123'
         }
-
+        
         #log in with new username and password
         request = self.client.post('/user/login/', login_data)
         self.assertEqual(request.status_code, 302)
