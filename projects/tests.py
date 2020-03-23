@@ -26,13 +26,13 @@ class Tester(TestCase):
             category = self.test_category,
             status = 'a'
         )
-        
+
         self.task1 = Task.objects.create(
             project = self.project1,
             title = "Testing task",
             description = "This is a task",
             budget = 500,
-            #location = "Test City"
+            location = "Test City"
         )
     
         self.project1.tasks.add(self.task1)
@@ -347,4 +347,147 @@ class Tester(TestCase):
         request = self.client.post('/projects/' + str(self.project1.id) + '/', data)
         
         assert(TaskOffer.objects.last().status == 'p')
+
+
+    def test_integration_budget_feature(self):
+        user2 = User.objects.create_user(
+            username = "Testoline",
+            password = "qwerty123",
+        )
+
+        self.assertEqual(self.project1.total_budget, 0)
+        
+        response = self.client.get('/projects/' + str(self.project1.id) + '/')
+
+        self.assertEqual(response.context['total_budget'], 500)
+
+        task2 = Task.objects.create(
+            project = self.project1,
+            title = "Testing task",
+            description = "This is a task",
+            budget = 500,
+        )
+    
+        self.project1.tasks.add(task2)
+
+        response2 = self.client.get('/projects/' + str(self.project1.id) + '/')
+
+        self.assertEquals(response2.context['total_budget'], 1000)
+
+
+    def test_integration_location_feature(self):
+        self.assertEqual(self.project1.tasks.last().location, "Test City")
+
+        task2 = Task.objects.create(
+            project = self.project1,
+            title = "Nice task",
+            description = "This is a task",
+            budget = 100,
+            location = "Right here",
+        )
+    
+        self.project1.tasks.add(task2)
+
+        response = self.client.get('/projects/' + str(self.project1.id) + '/')
+
+        self.assertEqual(response.context['tasks'].last().location, "Right here")
+
+
+    def test_integration_display_feature(self):
+        response = self.client.get('/projects/' + str(self.project1.id) + '/')
+        self.assertEqual(response.context['tasks'].last().location, "Test City")
+        self.assertEqual(response.context['total_budget'], 500)
+
+
+    def test_profile_feature(self):
+        user2 = User.objects.create_user(
+            username = "Testoline",
+            password = "qwerty123",
+        )
+
+        login_data = {
+            'username': 'Testoline',
+            'password': 'qwerty123'
+        }
+
+        request = self.client.post('/user/login/', login_data)
+        self.assertEqual(request.status_code, 302)
+
+        request = self.client.get('/user/profile/')
+        self.assertEqual(request.status_code, 200)
+
+        data = {
+            'username': 'TestyAndTasty',
+            'first_name': 'Testy',
+            'last_name': 'Test',
+            'categories': 1,
+            'company': 'SWECO',
+            'email': 'si@gmail.com',
+            'email_confirmation': 'si@gmail.com',
+            'password1': 'Superuser_123',
+            'password2': 'Superuser_123',
+            'phone_number': 48022223,
+            'country': 'Norge',
+            'state': 'Fjellhamar',
+            'city': 'Trondheim',
+            'postal_code': 7045,
+            'street_address': 'Øvre Gate Nedre'
+        }
+
+        request = self.client.post('/user/profile/', data)
+        self.assertEqual(request.status_code, 302)
+
+        login_data = {
+            'username': 'TestyAndTasty',
+            'password': 'Superuser_123'
+        }
+
+        #log in with new username and password
+        request = self.client.post('/user/login/', login_data)
+        self.assertEqual(request.status_code, 302)
+
+        
+
+    def test_system(self):
+        user2 = User.objects.create_user(
+            username = "Testoline",
+            password = "qwerty123",
+        )
+
+        false_login_data = {
+            'username': 'nouser',
+            'password': 'nopassword'
+        }
+
+        # hammer the website with false login attempts 
+        for i in range(0, 100):
+            request = self.client.post('/user/login/', false_login_data)
+            self.assertEqual(request.status_code, 200)
+
+        login_data = {
+            'username': 'Testoline',
+            'password': 'qwerty123'
+        }
+
+        request = self.client.post('/user/login/', login_data)
+        self.assertEqual(request.status_code, 302)
+
+        data = {
+            'title': 'Testing title',
+            'description': 'Testing description',
+            'price': 200,
+            'taskvalue': self.task1.id,
+            'offer_submit': ''
+        }
+
+        # hammer the website with project offers
+        for i in range(0, 100):
+            data['price'] += i
+            response = self.client.post('/projects/' + str(self.project1.id) + '/', data)
+            self.assertEqual(response.status_code, 200)
+
+
+
+
+
 
