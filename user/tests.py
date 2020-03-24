@@ -37,6 +37,7 @@ class Tester(TestCase):
         
         self.project1.tasks.add(self.task1)
 
+
     ################# boundary value testing ##################
     def test_boundary_signup_post_valid_form(self):
         data = {
@@ -88,6 +89,236 @@ class Tester(TestCase):
         self.assertEqual(response.status_code, 200)
 
 
-    
+    ###### 2-way domain test #######
+    def test_2_way_domain(self):
+        data = {
+            'username': 'tester12', 
+            'first_name': 'Tester',
+            'last_name': 'Guy',
+            'categories': 1,
+            'company': 'Test Inc.',
+            'email': 'testerguy@gmail.com',
+            'email_confirmation': 'testerguygmail.com',
+            'password1': 'hemmelig123',
+            'password2': 'hemmelig123',
+            'phone_number': 99001122,
+            'country': 'Norge',
+            'state': 'Test State',
+            'city': 'Test City',
+            'postal_code': 4567,
+            'street_address': 'Test Street 45' 
+        }
 
+        response = self.client.post('/user/signup/', data)
+        self.assertEqual(response.status_code, 200)  
+        # status code equal to 200 means the form was invalid and we were not redirected
 
+        data = {
+            'username': 'tester12', 
+            'first_name': 'Tester',
+            'last_name': 'Guy',
+            'categories': 1,
+            'company': 'Test Inc.',
+            'email': 'testerguy@gmail',
+            'email_confirmation': 'testerguy@gmail.com',
+            'password1': 'hemmelig123',
+            'password2': 'hemmelig123',
+            'phone_number': 99001122,
+            'country': 'Norge',
+            'state': 'Test State',
+            'city': 'Test City',
+            'postal_code': 4567,
+            'street_address': 'Test Street 45' 
+        }
+
+        response = self.client.post('/user/signup/', data)
+        self.assertEqual(response.status_code, 200)  
+
+        data = {
+            'username': 'tester12', 
+            'first_name': 'Tester',
+            'last_name': 'Guy',
+            'categories': 1,
+            'company': 'Test Inc.',
+            'email': 'testerguygmail.com',
+            'email_confirmation': 'testerguy@gmail',
+            'password1': 'hemmelig123',
+            'password2': 'hemmelig123',
+            'phone_number': 99001122,
+            'country': 'Norge',
+            'state': 'Test State',
+            'city': 'Test City',
+            'postal_code': 4567,
+            'street_address': 'Test Street 45' 
+        }
+
+        response = self.client.post('/user/signup/', data)
+        self.assertEqual(response.status_code, 200)
+
+        data = {
+            'username': 'tester 56', 
+            'first_name': 'Tester',
+            'last_name': 'Guy',
+            'categories': 1,
+            'company': 'Test Inc.',
+            'email': 'testerguy@gmail',
+            'email_confirmation': 'testerguy@gmail',
+            'password1': 'hemmelig123',
+            'password2': 'hemmelig123',
+            'phone_number': 99001122,
+            'country': 'Norge',
+            'state': 'Test State',
+            'city': 'Test City',
+            'postal_code': 4567,
+            'street_address': 'Test Street 45' 
+        }
+
+        response = self.client.post('/user/signup/', data)
+        self.assertEqual(response.status_code, 200)
+
+        data = {
+            'username': 'Tester_32', 
+            'first_name': 'Tester',
+            'last_name': 'Guy',
+            'categories': 1,
+            'company': 'Test Inc.',
+            'email': 'testerguy@gmail.com',
+            'email_confirmation': 'testerguygmail.com',
+            'password1': 'hemmelig123',
+            'password2': 'hemmelig123',
+            'phone_number': 99001122,
+            'country': 'Norge',
+            'state': 'Test State',
+            'city': 'Test City',
+            'postal_code': 4567,
+            'street_address': 'Test Street 45' 
+        }
+
+        response = self.client.post('/user/signup/', data)
+        self.assertEqual(response.status_code, 200)
+
+        data = {
+            'username': 'Tester_32', 
+            'first_name': 'Tester',
+            'last_name': 'Guy',
+            'categories': 1,
+            'company': 'Test Inc.',
+            'email': 'testerguy@gmail',
+            'email_confirmation': 'testerguy@gmail.com',
+            'password1': 'hemmelig123',
+            'password2': 'hemmelig123',
+            'phone_number': 99001122,
+            'country': 'Norge',
+            'state': 'Test State',
+            'city': 'Test City',
+            'postal_code': 4567,
+            'street_address': 'Test Street 45' 
+        }
+
+        response = self.client.post('/user/signup/', data)
+        self.assertEqual(response.status_code, 200)
+
+        data = {
+            'username': 'Tester_32', 
+            'first_name': 'Tester',
+            'last_name': 'Guy',
+            'categories': 1,
+            'company': 'Test Inc.',
+            'email': 'testerguygmail.com',
+            'email_confirmation': 'testerguy@gmail',
+            'password1': 'hemmelig123',
+            'password2': 'hemmelig123',
+            'phone_number': 99001122,
+            'country': 'Norge',
+            'state': 'Test State',
+            'city': 'Test City',
+            'postal_code': 4567,
+            'street_address': 'Test Street 45' 
+        }
+
+        response = self.client.post('/user/signup/', data)
+        self.assertEqual(response.status_code, 200)
+
+        data = {
+            'username': 'tester12', 
+            'first_name': 'Tester',
+            'last_name': 'Guy',
+            'categories': 1,
+            'company': 'Test Inc.',
+            'email': 'testerguy@gmail.com',
+            'email_confirmation': 'testerguy@gmail.com',
+            'password1': 'hemmelig123',
+            'password2': 'hemmelig123',
+            'phone_number': 99001122,
+            'country': 'Norge',
+            'state': 'Test State',
+            'city': 'Test City',
+            'postal_code': 4567,
+            'street_address': 'Test Street 45' 
+        }
+
+        response = self.client.post('/user/signup/', data)
+        self.assertEqual(response.status_code, 302)
+
+        data = {
+            'username': 'tester 56', 
+            'first_name': 'Tester',
+            'last_name': 'Guy',
+            'categories': 1,
+            'company': 'Test Inc.',
+            'email': 'testerguy@gmail.com',
+            'email_confirmation': 'testerguygmail.com',
+            'password1': 'hemmelig123',
+            'password2': 'hemmelig123',
+            'phone_number': 99001122,
+            'country': 'Norge',
+            'state': 'Test State',
+            'city': 'Test City',
+            'postal_code': 4567,
+            'street_address': 'Test Street 45' 
+        }
+
+        response = self.client.post('/user/signup/', data)
+        self.assertEqual(response.status_code, 200)
+
+        data = {
+            'username': 'tester 56', 
+            'first_name': 'Tester',
+            'last_name': 'Guy',
+            'categories': 1,
+            'company': 'Test Inc.',
+            'email': 'testerguy@gmail',
+            'email_confirmation': 'testerguy@gmail.com',
+            'password1': 'hemmelig123',
+            'password2': 'hemmelig123',
+            'phone_number': 99001122,
+            'country': 'Norge',
+            'state': 'Test State',
+            'city': 'Test City',
+            'postal_code': 4567,
+            'street_address': 'Test Street 45' 
+        }
+
+        response = self.client.post('/user/signup/', data)
+        self.assertEqual(response.status_code, 200)
+
+        data = {
+            'username': 'tester 56', 
+            'first_name': 'Tester',
+            'last_name': 'Guy',
+            'categories': 1,
+            'company': 'Test Inc.',
+            'email': 'testerguygmail.com',
+            'email_confirmation': 'testerguy@gmail',
+            'password1': 'hemmelig123',
+            'password2': 'hemmelig123',
+            'phone_number': 99001122,
+            'country': 'Norge',
+            'state': 'Test State',
+            'city': 'Test City',
+            'postal_code': 4567,
+            'street_address': 'Test Street 45' 
+        }
+
+        response = self.client.post('/user/signup/', data)
+        self.assertEqual(response.status_code, 200)
