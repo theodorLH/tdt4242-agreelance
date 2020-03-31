@@ -128,7 +128,7 @@ def project_view(request, project_id):
         })
 
 
-def isProjectOwner(user, project):
+def is_project_owner(user, project):
     return user == project.user.user
 
 
