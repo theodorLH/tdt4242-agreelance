@@ -20,7 +20,7 @@ class Tester(TestCase):
         )
 
         self.project1 = Project.objects.create(
-            user = self.user1.profile, #User.objects.last().profile,
+            user = self.user1.profile,
             title = "Generic Project",
             description = "Clean house",
             category = self.test_category,
@@ -38,7 +38,6 @@ class Tester(TestCase):
         self.project1.tasks.add(self.task1)
 
     def test_project_view_offer_response(self):
-
         user2 = User.objects.create_user(
             username = "Testoline",
             password = "qwerty123",
@@ -71,7 +70,6 @@ class Tester(TestCase):
         assert(TaskOffer.objects.get(pk=1).status == 'a')
 
     def test_project_view_status_change(self):
-
         user2 = User.objects.create_user(
             username = "Testoline",
             password = "qwerty123",
@@ -102,7 +100,6 @@ class Tester(TestCase):
         assert(response2.context['project'].status == 'i')
 
     def test_project_view_offer_submit(self):
-
         user2 = User.objects.create_user(
             username = "Testoline",
             password = "qwerty123",
@@ -157,7 +154,7 @@ class Tester(TestCase):
         assert(response['upload'] == True)
 
     def test_get_user_task_permissions_task_offerer(self):
-        #return statement 2: if task.accepted_task_offer() and task.accepted_task_offer().offerer == user.profile
+        '''return statement 2: if task.accepted_task_offer() and task.accepted_task_offer().offerer == user.profile'''
         user2 = User.objects.create_user(
             username = "Testoline",
             password = "qwerty123",
@@ -247,7 +244,7 @@ class Tester(TestCase):
 
     ################# output coverage testing ##################
     def test_output_coverage_accepted_offer(self):
-        # accept the project offer
+        ''' accept the project offer '''
         user2 = User.objects.create_user(
             username = "Testoline",
             password = "qwerty123",
@@ -284,7 +281,7 @@ class Tester(TestCase):
 
 
     def test_output_coverage_declined_offer(self):
-        # decline the project offer
+        ''' decline the project offer '''
         user2 = User.objects.create_user(
             username = "Testoline",
             password = "qwerty123",
@@ -321,7 +318,7 @@ class Tester(TestCase):
 
 
     def test_output_coverage_declined_offer_not_authenticated(self):
-        # try to decline the project offer when not authenticated as project owner
+        ''' try to decline the project offer when not authenticated as project owner '''
         user2 = User.objects.create_user(
             username = "Testoline",
             password = "qwerty123",
