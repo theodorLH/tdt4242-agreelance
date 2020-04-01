@@ -74,7 +74,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('title', models.CharField(max_length=200)),
                 ('description', models.TextField(max_length=500)),
-                ('price', models.IntegerField(default=0)),
+                ('price_offered', models.IntegerField(default=0)),
                 ('status', models.CharField(choices=[('a', 'Accepted'), ('p', 'Pending'), ('d', 'Declined')], default='p', max_length=8)),
                 ('feedback', models.TextField(max_length=500)),
             ],

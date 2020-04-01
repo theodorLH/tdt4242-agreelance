@@ -155,7 +155,7 @@ class TaskOffer(models.Model):
     task = models.ForeignKey(Task, on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
     description = models.TextField(max_length=500)
-    price = models.IntegerField(default=0)
+    price_offered = models.IntegerField(default=0)
     offerer = models.ForeignKey(Profile, on_delete=models.CASCADE)
 
     ACCEPTED = 'a'

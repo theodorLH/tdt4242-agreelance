@@ -28,11 +28,11 @@ class ProjectStatusForm(forms.ModelForm):
 class TaskOfferForm(forms.ModelForm):
     title = forms.CharField(max_length=200)
     description = forms.Textarea()
-    price = forms.NumberInput()
+    price_offered = forms.NumberInput()
 
     class Meta:
         model = TaskOffer
-        fields = ('title', 'description', 'price',)
+        fields = ('title', 'description', 'price_offered',)
 
 class TaskOfferResponseForm(forms.ModelForm):
     feedback = forms.Textarea()
