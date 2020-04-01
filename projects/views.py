@@ -12,6 +12,7 @@ from django.contrib.sites.shortcuts import get_current_site
 
 
 def projects(request):
+    '''Retrieves and renders the product categories and the respective projects'''
     projects = Project.objects.all()
     project_categories = ProjectCategory.objects.all()
 
@@ -31,6 +32,7 @@ def projects(request):
 
 @login_required
 def new_project(request):
+    '''Renders the new project page and redirects to the project view if the POST request is valid'''
     current_site = get_current_site(request)
     if request.method == 'POST':
         form = ProjectForm(request.POST)

@@ -15,6 +15,7 @@ from .forms import SignUpForm
 def index(request):
     return render(request, 'base.html')
 
+
 def sign_up(request):
     if request.method == 'POST':
         form = SignUpForm(request.POST)
@@ -27,7 +28,9 @@ def sign_up(request):
             user.save()
             raw_password = form.cleaned_data.get('password1')
             user = authenticate(username=user.username, password=raw_password)
-            messages.success(request, 'Your account has been created and is awaiting verification.')
+            messages.success(
+                request,
+                'Your account has been created and is awaiting verification.')
             return redirect('home')
     else:
         form = SignUpForm()
@@ -38,8 +41,8 @@ def sign_up(request):
 def profile(request):
     old_user = request.user
     if request.method == 'POST':
-        form = SignUpForm(request.POST) 
-        if form.is_valid():         
+        form = SignUpForm(request.POST)
+        if form.is_valid():
             user = form.save()
             user.refresh_from_db()
             user.profile.company = form.cleaned_data.get('company')
@@ -49,9 +52,9 @@ def profile(request):
             raw_password = form.cleaned_data.get('password1')
             user = authenticate(username=user.username, password=raw_password)
             old_user.delete()
-            messages.success(request, 'Your account has been reneewed. Sign in to continue')
+            messages.success(
+                request, 'Your account has been reneewed. Sign in to continue')
             return redirect('home')
     else:
         form = SignUpForm()
     return render(request, 'user/profile.html', {'form': form})
-    
