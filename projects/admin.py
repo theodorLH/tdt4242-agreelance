@@ -2,9 +2,11 @@ from django.contrib import admin
 
 from .models import Project, Task, TaskFile, Delivery, ProjectCategory, Team, TaskFileTeam
 
+
 class TaskInline(admin.TabularInline):
     model = Task
     verbose_name_plural = 'Tasks'
+
 
 class ProjectAdmin(admin.ModelAdmin):
     inlines = (TaskInline, )
@@ -13,6 +15,7 @@ class ProjectAdmin(admin.ModelAdmin):
         if not obj:
             return super(ProjectAdmin, self).get_inline_instances(request, obj)
         return list()
+
 
 admin.site.register(Project, ProjectAdmin)
 admin.site.register(Task)

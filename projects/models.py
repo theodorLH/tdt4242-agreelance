@@ -5,6 +5,7 @@ from django.core.files.storage import FileSystemStorage
 from django.conf import settings
 import os
 
+
 class OverwriteStorage(FileSystemStorage):
 
     def get_available_name(self, name, max_length):
@@ -25,7 +26,8 @@ class OverwriteStorage(FileSystemStorage):
             except: pass
             super(MyModelName, self).save(*args, **kwargs)
         """
-        # If the filename already exists, remove it as if it was a true file system
+        # If the filename already exists, remove it as if it was a true file
+        # system
         if self.exists(name):
             os.remove(os.path.join(settings.MEDIA_ROOT, name))
         return name
@@ -37,12 +39,17 @@ class ProjectCategory(models.Model):
     def __str__(self):
         return self.name
 
+
 class Project(models.Model):
     user = models.ForeignKey(Profile, on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
     description = models.TextField(max_length=500)
-    participants = models.ManyToManyField(Profile, related_name='project_participants')
-    category = models.ForeignKey(ProjectCategory, on_delete=models.CASCADE, related_name='project_category')
+    participants = models.ManyToManyField(
+        Profile, related_name='project_participants')
+    category = models.ForeignKey(
+        ProjectCategory,
+        on_delete=models.CASCADE,
+        related_name='project_category')
     total_budget = 0
 
     OPEN = 'o'
@@ -53,18 +60,24 @@ class Project(models.Model):
         (INPROG, 'In progress'),
         (FINISHED, 'Finished'),
     )
-    status = models.CharField(max_length=11, choices=STATUS_CHOICES, default=OPEN)
+    status = models.CharField(
+        max_length=11,
+        choices=STATUS_CHOICES,
+        default=OPEN)
 
     def __str__(self):
         return self.title
 
 
 class Task(models.Model):
-    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name="tasks")
+    project = models.ForeignKey(
+        Project,
+        on_delete=models.CASCADE,
+        related_name="tasks")
     title = models.CharField(max_length=200)
     description = models.TextField(max_length=500)
     budget = models.IntegerField(default=0)
-    location = models.TextField(default = '')
+    location = models.TextField(default='')
 
     AWAITING_DELIVERY = 'ad'
     PENDING_ACCEPTANCE = 'pa'
@@ -79,16 +92,21 @@ class Task(models.Model):
         (DECLINED_DELIVERY, 'Declined delivery, please revise'),
     )
 
-    status = models.CharField(max_length=50, choices=STATUS_CHOICES, default=AWAITING_DELIVERY)
+    status = models.CharField(
+        max_length=50,
+        choices=STATUS_CHOICES,
+        default=AWAITING_DELIVERY)
     feedback = models.TextField(max_length=500, default="")
 
-    read = models.ManyToManyField(Profile, related_name='task_participants_read')
-    write = models.ManyToManyField(Profile, related_name='task_participants_write')
-    modify = models.ManyToManyField(Profile, related_name='task_participants_modify')
-
+    read = models.ManyToManyField(
+        Profile, related_name='task_participants_read')
+    write = models.ManyToManyField(
+        Profile, related_name='task_participants_write')
+    modify = models.ManyToManyField(
+        Profile, related_name='task_participants_modify')
 
     def __str__(self):
-        return  str(self.id) + " " + self.title
+        return str(self.id) + " " + self.title
 
     def accepted_task_offer(task):
         task_offer = None
@@ -101,42 +119,69 @@ class Task(models.Model):
 
 class Team(models.Model):
     name = models.CharField(max_length=200)
-    task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name="teams")
+    task = models.ForeignKey(
+        Task,
+        on_delete=models.CASCADE,
+        related_name="teams")
     members = models.ManyToManyField(Profile, related_name='teams')
     write = models.BooleanField(default=False)
 
-
     def __str__(self):
-        return  self.task.project.title + " - " + self.task.title + " - " + self.name
+        return self.task.project.title + " - " + self.task.title + " - " + self.name
+
 
 def directory_path(instance, filename):
     return 'static/uploads/tasks/{0}/{1}'.format(instance.task.id, filename)
 
 
 class TaskFile(models.Model):
-    task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name="files")
-    file = models.FileField(upload_to=directory_path, storage=OverwriteStorage())
+    task = models.ForeignKey(
+        Task,
+        on_delete=models.CASCADE,
+        related_name="files")
+    file = models.FileField(
+        upload_to=directory_path,
+        storage=OverwriteStorage())
 
     def name(self):
         parts = self.file.path.split("/")
         file_name = parts[len(parts) - 1]
         return file_name
 
+
 class TaskFileTeam(models.Model):
-    file = models.ForeignKey(TaskFile, on_delete=models.CASCADE, related_name="teams")
-    team = models.ForeignKey(Team, on_delete=models.CASCADE, related_name="file")
+    file = models.ForeignKey(
+        TaskFile,
+        on_delete=models.CASCADE,
+        related_name="teams")
+    team = models.ForeignKey(
+        Team,
+        on_delete=models.CASCADE,
+        related_name="file")
     name = models.CharField(max_length=200)
     read = models.BooleanField(default=False)
     write = models.BooleanField(default=False)
     modify = models.BooleanField(default=False)
 
+
 class Delivery(models.Model):
-    task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name="delivery")
+    task = models.ForeignKey(
+        Task,
+        on_delete=models.CASCADE,
+        related_name="delivery")
     file = models.FileField(upload_to=directory_path)
     comment = models.TextField(max_length=500)
-    delivery_user = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="deliveries")
+    delivery_user = models.ForeignKey(
+        Profile,
+        on_delete=models.CASCADE,
+        related_name="deliveries")
     delivery_time = models.DateTimeField(auto_now=True)
-    responding_user = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="responded_deliveries", blank=True, null=True)
+    responding_user = models.ForeignKey(
+        Profile,
+        on_delete=models.CASCADE,
+        related_name="responded_deliveries",
+        blank=True,
+        null=True)
     responding_time = models.DateTimeField(blank=True, null=True)
 
     ACCEPTED = 'a'
@@ -147,7 +192,10 @@ class Delivery(models.Model):
         (PENDING, 'Pending'),
         (DECLINED, 'Declined'),
     )
-    status = models.CharField(max_length=8, choices=STATUS_CHOICES, default=PENDING)
+    status = models.CharField(
+        max_length=8,
+        choices=STATUS_CHOICES,
+        default=PENDING)
     feedback = models.TextField(max_length=500)
 
 
@@ -155,7 +203,7 @@ class TaskOffer(models.Model):
     task = models.ForeignKey(Task, on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
     description = models.TextField(max_length=500)
-    price = models.IntegerField(default=0)
+    price_offered = models.IntegerField(default=0)
     offerer = models.ForeignKey(Profile, on_delete=models.CASCADE)
 
     ACCEPTED = 'a'
@@ -166,7 +214,10 @@ class TaskOffer(models.Model):
         (PENDING, 'Pending'),
         (DECLINED, 'Declined'),
     )
-    status = models.CharField(max_length=8, choices=STATUS_CHOICES, default=PENDING)
+    status = models.CharField(
+        max_length=8,
+        choices=STATUS_CHOICES,
+        default=PENDING)
     feedback = models.TextField(max_length=500)
 
     def calculate_average_task_offer(self):

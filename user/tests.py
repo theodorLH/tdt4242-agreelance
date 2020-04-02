@@ -1,6 +1,6 @@
 from django.test import TestCase, Client, RequestFactory
 from django.contrib.auth.models import User
-from .views import signup
+from .views import sign_up
 from django.test import TestCase
 from django.db import models
 from projects.models import Project, Task
@@ -12,36 +12,36 @@ from projects.models import ProjectCategory, TaskOffer
 class Tester(TestCase):
     def setUp(self):
         self.user1 = User.objects.create_user(
-            username = "Tester_Guy",
-            password = "qwerty123",
+            username="Tester_Guy",
+            password="qwerty123",
         )
 
         self.test_category = ProjectCategory.objects.create(
-            name =  "Cleaning"
+            name="Cleaning"
         )
 
         self.project1 = Project.objects.create(
-            user = self.user1.profile, #User.objects.last().profile,
-            title = "Generic Project",
-            description = "Clean house",
-            category = self.test_category,
-            status = 'a'
+            user=self.user1.profile,  # User.objects.last().profile,
+            title="Generic Project",
+            description="Clean house",
+            category=self.test_category,
+            status='a'
         )
-        
+
         self.task1 = Task.objects.create(
-            project = self.project1,
-            title = "Testing task",
-            description = "This is a task",
-            budget = 500,
+            project=self.project1,
+            title="Testing task",
+            description="This is a task",
+            budget=500,
         )
-        
+
         self.project1.tasks.add(self.task1)
 
-
     ################# boundary value testing ##################
+
     def test_boundary_signup_post_valid_form(self):
         data = {
-            'username': 'tester12', 
+            'username': 'tester12',
             'first_name': 'Tester',
             'last_name': 'Guy',
             'categories': 1,
@@ -55,7 +55,7 @@ class Tester(TestCase):
             'state': 'Test State',
             'city': 'Test City',
             'postal_code': 1909,
-            'street_address': 'Test Street 50B' 
+            'street_address': 'Test Street 50B'
         }
 
         response = self.client.post('/user/signup/', data)
@@ -63,7 +63,7 @@ class Tester(TestCase):
 
     def test_boundary_signup_post_invalid_form(self):
         data = {
-            'username': 'tester12', 
+            'username': 'tester12',
             'first_name': 'Tester',
             'last_name': 'Guy',
             'categories': 1,
@@ -77,7 +77,7 @@ class Tester(TestCase):
             'state': 'Test State',
             'city': 'Test City',
             'postal_code': 1909,
-            'street_address': 'Test Street 50B' 
+            'street_address': 'Test Street 50B'
         }
 
         response = self.client.post('/user/signup/', data)
@@ -88,11 +88,11 @@ class Tester(TestCase):
         response = self.client.get('/user/signup/')
         self.assertEqual(response.status_code, 200)
 
-
     ###### 2-way domain test #######
+
     def test_2_way_domain(self):
         data = {
-            'username': 'tester12', 
+            'username': 'tester12',
             'first_name': 'Tester',
             'last_name': 'Guy',
             'categories': 1,
@@ -106,15 +106,16 @@ class Tester(TestCase):
             'state': 'Test State',
             'city': 'Test City',
             'postal_code': 4567,
-            'street_address': 'Test Street 45' 
+            'street_address': 'Test Street 45'
         }
 
         response = self.client.post('/user/signup/', data)
-        self.assertEqual(response.status_code, 200)  
-        # status code equal to 200 means the form was invalid and we were not redirected
+        self.assertEqual(response.status_code, 200)
+        # status code equal to 200 means the form was invalid and we were not
+        # redirected
 
         data = {
-            'username': 'tester12', 
+            'username': 'tester12',
             'first_name': 'Tester',
             'last_name': 'Guy',
             'categories': 1,
@@ -128,14 +129,14 @@ class Tester(TestCase):
             'state': 'Test State',
             'city': 'Test City',
             'postal_code': 4567,
-            'street_address': 'Test Street 45' 
+            'street_address': 'Test Street 45'
         }
 
         response = self.client.post('/user/signup/', data)
-        self.assertEqual(response.status_code, 200)  
+        self.assertEqual(response.status_code, 200)
 
         data = {
-            'username': 'tester12', 
+            'username': 'tester12',
             'first_name': 'Tester',
             'last_name': 'Guy',
             'categories': 1,
@@ -149,14 +150,14 @@ class Tester(TestCase):
             'state': 'Test State',
             'city': 'Test City',
             'postal_code': 4567,
-            'street_address': 'Test Street 45' 
+            'street_address': 'Test Street 45'
         }
 
         response = self.client.post('/user/signup/', data)
         self.assertEqual(response.status_code, 200)
 
         data = {
-            'username': 'tester 56', 
+            'username': 'tester 56',
             'first_name': 'Tester',
             'last_name': 'Guy',
             'categories': 1,
@@ -170,14 +171,14 @@ class Tester(TestCase):
             'state': 'Test State',
             'city': 'Test City',
             'postal_code': 4567,
-            'street_address': 'Test Street 45' 
+            'street_address': 'Test Street 45'
         }
 
         response = self.client.post('/user/signup/', data)
         self.assertEqual(response.status_code, 200)
 
         data = {
-            'username': 'Tester_32', 
+            'username': 'Tester_32',
             'first_name': 'Tester',
             'last_name': 'Guy',
             'categories': 1,
@@ -191,14 +192,14 @@ class Tester(TestCase):
             'state': 'Test State',
             'city': 'Test City',
             'postal_code': 4567,
-            'street_address': 'Test Street 45' 
+            'street_address': 'Test Street 45'
         }
 
         response = self.client.post('/user/signup/', data)
         self.assertEqual(response.status_code, 200)
 
         data = {
-            'username': 'Tester_32', 
+            'username': 'Tester_32',
             'first_name': 'Tester',
             'last_name': 'Guy',
             'categories': 1,
@@ -212,14 +213,14 @@ class Tester(TestCase):
             'state': 'Test State',
             'city': 'Test City',
             'postal_code': 4567,
-            'street_address': 'Test Street 45' 
+            'street_address': 'Test Street 45'
         }
 
         response = self.client.post('/user/signup/', data)
         self.assertEqual(response.status_code, 200)
 
         data = {
-            'username': 'Tester_32', 
+            'username': 'Tester_32',
             'first_name': 'Tester',
             'last_name': 'Guy',
             'categories': 1,
@@ -233,14 +234,14 @@ class Tester(TestCase):
             'state': 'Test State',
             'city': 'Test City',
             'postal_code': 4567,
-            'street_address': 'Test Street 45' 
+            'street_address': 'Test Street 45'
         }
 
         response = self.client.post('/user/signup/', data)
         self.assertEqual(response.status_code, 200)
 
         data = {
-            'username': 'tester12', 
+            'username': 'tester12',
             'first_name': 'Tester',
             'last_name': 'Guy',
             'categories': 1,
@@ -254,14 +255,14 @@ class Tester(TestCase):
             'state': 'Test State',
             'city': 'Test City',
             'postal_code': 4567,
-            'street_address': 'Test Street 45' 
+            'street_address': 'Test Street 45'
         }
 
         response = self.client.post('/user/signup/', data)
         self.assertEqual(response.status_code, 302)
 
         data = {
-            'username': 'tester 56', 
+            'username': 'tester 56',
             'first_name': 'Tester',
             'last_name': 'Guy',
             'categories': 1,
@@ -275,14 +276,14 @@ class Tester(TestCase):
             'state': 'Test State',
             'city': 'Test City',
             'postal_code': 4567,
-            'street_address': 'Test Street 45' 
+            'street_address': 'Test Street 45'
         }
 
         response = self.client.post('/user/signup/', data)
         self.assertEqual(response.status_code, 200)
 
         data = {
-            'username': 'tester 56', 
+            'username': 'tester 56',
             'first_name': 'Tester',
             'last_name': 'Guy',
             'categories': 1,
@@ -296,14 +297,14 @@ class Tester(TestCase):
             'state': 'Test State',
             'city': 'Test City',
             'postal_code': 4567,
-            'street_address': 'Test Street 45' 
+            'street_address': 'Test Street 45'
         }
 
         response = self.client.post('/user/signup/', data)
         self.assertEqual(response.status_code, 200)
 
         data = {
-            'username': 'tester 56', 
+            'username': 'tester 56',
             'first_name': 'Tester',
             'last_name': 'Guy',
             'categories': 1,
@@ -317,7 +318,7 @@ class Tester(TestCase):
             'state': 'Test State',
             'city': 'Test City',
             'postal_code': 4567,
-            'street_address': 'Test Street 45' 
+            'street_address': 'Test Street 45'
         }
 
         response = self.client.post('/user/signup/', data)
