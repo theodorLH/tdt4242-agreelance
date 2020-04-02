@@ -1,5 +1,4 @@
 from django.http import HttpResponse
-from projects.models import ProjectCategory
 from django.db import models
 from django.db.models.signals import post_save
 from django.contrib import messages
@@ -9,6 +8,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect, get_object_or_404
 from django.dispatch import receiver
+from projects.models import ProjectCategory
 from .forms import SignUpForm
 
 

@@ -447,6 +447,12 @@ class Tester(TestCase):
         self.assertEqual(request.status_code, 302)
 
 
+    def test_base(self):
+        request = self.client.get('/')
+        self.assertEqual(request.status_code, 302)
+        # ensuring that the accessing the base page redirects to '/projects/'
+
+
 '''
     def test_system(self):
         user2 = User.objects.create_user(

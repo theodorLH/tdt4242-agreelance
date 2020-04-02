@@ -1,7 +1,4 @@
 from django.http import HttpResponse, HttpResponseRedirect
-from user.models import Profile
-from .models import Project, Task, TaskFile, TaskOffer, Delivery, ProjectCategory, Team, TaskFileTeam, directory_path
-from .forms import ProjectForm, TaskFileForm, ProjectStatusForm, TaskOfferForm, TaskOfferResponseForm, TaskPermissionForm, DeliveryForm, TaskDeliveryResponseForm, TeamForm, TeamAddForm
 from django.core import mail
 from django.utils import timezone
 from django.shortcuts import render, redirect, get_object_or_404
@@ -9,6 +6,9 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.sites.shortcuts import get_current_site
+from user.models import Profile
+from .models import Project, Task, TaskFile, TaskOffer, Delivery, ProjectCategory, Team, TaskFileTeam, directory_path
+from .forms import ProjectForm, TaskFileForm, ProjectStatusForm, TaskOfferForm, TaskOfferResponseForm, TaskPermissionForm, DeliveryForm, TaskDeliveryResponseForm, TeamForm, TeamAddForm
 
 
 def projects(request):
