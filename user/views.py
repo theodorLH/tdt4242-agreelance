@@ -1,14 +1,7 @@
-from django.http import HttpResponse
-from django.db import models
-from django.db.models.signals import post_save
 from django.contrib import messages
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import authenticate
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
-from django.contrib.auth.forms import UserCreationForm
-from django.shortcuts import render, redirect, get_object_or_404
-from django.dispatch import receiver
-from projects.models import ProjectCategory
+from django.shortcuts import render, redirect
 from .forms import SignUpForm
 
 

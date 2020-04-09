@@ -1,4 +1,4 @@
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponseRedirect
 from django.core import mail
 from django.utils import timezone
 from django.shortcuts import render, redirect, get_object_or_404
