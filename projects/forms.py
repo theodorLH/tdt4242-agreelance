@@ -1,7 +1,7 @@
 from django import forms
+from django.contrib.auth.models import User
 from user.models import Profile
 from .models import Project, TaskFile, TaskOffer, Delivery, ProjectCategory, Team
-from django.contrib.auth.models import User
 
 
 class ProjectForm(forms.ModelForm):

@@ -1,6 +1,5 @@
 from django.test import TestCase, Client, RequestFactory
 from django.contrib.auth.models import User
-from .views import sign_up
 from django.test import TestCase
 from django.db import models
 from projects.models import Project, Task
